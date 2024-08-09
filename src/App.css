@@ -264,6 +264,8 @@ body {
 		max-height: 25vh; /* Limit height to make videos smaller */
 		object-fit: cover; /* Cover the container while maintaining aspect ratio */
 		border-radius: 15px; /* Round corners */
+		box-sizing: border-box; /* Include padding and borders in the width/height */
+}
 	}
     .myId {
         top: auto; /* Remove top positioning */
