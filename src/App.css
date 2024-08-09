@@ -258,6 +258,7 @@ body {
 	
 	.video {
 		width: 100%; /* Fill container width */
+		overflow: hidden; /* Ensure content does not overflow beyond rounded corners */
 		height: auto; /* Maintain aspect ratio */
 		max-height: 25vh; /* Limit height to make videos smaller */
 		object-fit: cover; /* Cover the container while maintaining aspect ratio */
@@ -337,7 +338,7 @@ body {
     }
 	.ready-button-container {
 		position: absolute; /* Ensure this is set if using positioning */
-		bottom: 34vh; /* Adjust distance from the bottom of the viewport */
+		margin-top: 31vh; /* Adjust distance from the bottom of the viewport */
 		left: 50%; /* Center horizontally */
 		transform: translateX(-50%); /* Center horizontally */
 		text-align: center; /* Center text and elements */
