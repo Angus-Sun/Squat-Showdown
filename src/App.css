@@ -1,7 +1,6 @@
 html, body {
     height: 100%;
     margin: 0;
-    overflow: hidden; /* Prevent scrollbars */
 }
 
 .container {
@@ -83,6 +82,7 @@ html, body {
 }
 
 .caller {
+	font-size: 2.5rem;
 	position: absolute;
 	top: 60%; /* Adjust vertical position */
 	left: 50%; /* Center horizontally */
@@ -99,4 +99,249 @@ body {
 		#ffffff,
 		#ffffff
 	); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.centered-container {
+	position: absolute;
+	top: 10vh;
+	width: 100%;
+	text-align: center;
+  }
+
+  .hidden {
+	visibility: hidden;
+  }
+  
+  .visible {
+	visibility: visible;
+  }
+  
+  .header-icon {
+	color: #000;
+	font-size: 6.5rem;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+	margin: 0;
+	margin-left: -10px;
+  }
+  
+  .header-title {
+	color: #000;
+	font-size: 3.5rem;
+	margin: 20px;
+  }
+  
+  .header-subtitle {
+	color: #000;
+	font-size: 1.5rem;
+	margin: 0;
+  }
+  
+  .room-container {
+	position: absolute;
+	top: 0;
+	left: 10;
+	width: 100%;
+	text-align: center;
+	font-size: 1.5rem;
+	font-weight: bold;
+  }
+  
+  .room-icon {
+	color: #000;
+	font-size: 4rem;
+	margin: 0;
+  }
+  
+  .room-title {
+	color: #000;
+	font-size: 2.5rem;
+	margin: 0;
+  }
+  
+  .room-code {
+	color: #000;
+	font-size: 1.5rem;
+	margin: 0;
+  }
+  
+  .video-visible {
+	display: block;
+  }
+  
+  .video-hidden {
+	display: none;
+  }
+  
+  .timer-container {
+	text-align: center;
+	margin-top: 150px;
+	margin-left: -1250px;
+  }
+  
+  .squat-counter-container {
+	text-align: center;
+	margin-top: 500px;
+	font-size: 3rem;
+	color: #000;
+	margin-left: -40px;
+  }
+  
+  .squat-counter {
+	color: #000;
+  }
+  
+  .ready-button-container {
+	text-align: center;
+	margin-top: 650px;
+	margin-left: -1890px;
+  }
+  
+  .opponent-ready-button {
+	text-align: center;
+	margin-top: -37px;
+	margin-left: 745px;
+  }
+  
+  .create-room-container {
+	visibility: visible;
+	margin-bottom: 30px;
+  }
+  
+  .hidden {
+	visibility: hidden;
+  }
+  .video::-webkit-media-controls {
+    display: none; /* Hide controls in WebKit browsers (Chrome, Safari) */
+}
+
+.video::-webkit-media-controls-start-playback-button {
+    display: none; /* Hide the play button */
+}
+
+/* Firefox */
+.video::-moz-media-controls {
+    display: none; /* Hide controls in Firefox */
+}
+
+/* Hide controls for other browsers */
+.video {
+    pointer-events: none; /* Disable interaction with the video */
+}
+  @media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr; /* Stack elements vertically on mobile */
+        grid-template-rows: auto; /* Adjust rows automatically */
+        height: auto; /* Let the height adjust based on content */
+        width: 100%; /* Use full width */
+        top: 5vh; /* Remove top positioning */
+        left: 0;
+        transform: none; /* Remove centering transform */
+        position: relative; /* Ensure container flows naturally */
+    }
+    .caller {
+		font-size: 1.5rem;
+		position: absolute;
+		top: 90%; /* Adjust vertical position */
+		left: 50%; /* Center horizontally */
+		transform: translateX(-50%); /* Adjust horizontal center */
+		text-align: center;
+		color: #000; /* Adjust text color if needed */
+		}
+    .video-container {
+		display: flex;
+		flex-direction: column; /* Stack videos vertically */
+		align-items: center; /* Center horizontally */
+		width: 80vw; /* Adjust width as needed */
+		height: auto; /* Height adjusts based on content */
+		gap: 5rem; /* Space between stacked videos */
+		margin: 2rem auto; /* Center container horizontally and add vertical margin */
+	}
+	
+	.video {
+		width: 100%; /* Fill container width */
+		height: auto; /* Maintain aspect ratio */
+		max-height: 25vh; /* Limit height to make videos smaller */
+		object-fit: cover; /* Cover the container while maintaining aspect ratio */
+		border-radius: 15px; /* Round corners */
+	}
+    .myId {
+        top: auto; /* Remove top positioning */
+        left: 50%; /* Center horizontally */
+        transform: translateX(-50%); /* Center horizontally */
+        margin-top: 15rem; /* Add top margin if needed */
+    }
+
+    .call-button {
+        margin-top: 1rem;
+    }
+
+    .centered-container {
+        top: 5vh; /* Adjust top position for mobile */
+    }
+
+    .header-icon {
+        font-size: 4rem; /* Smaller icon size */
+    }
+
+    .header-title {
+        font-size: 2.5rem; /* Smaller title size */
+    }
+
+    .header-subtitle {
+        font-size: 1rem; /* Smaller subtitle size */
+    }
+
+    .room-container {
+        top: 0;
+        left: 0;
+        font-size: 1.2rem; /* Slightly smaller font */
+    }
+
+    .room-icon {
+        font-size: 2rem; /* Smaller room icon */
+    }
+
+    .room-title {
+        font-size: 1.5rem; /* Smaller room title */
+    }
+
+    .room-code {
+        font-size: 1rem; /* Smaller room code */
+    }
+
+    .timer-container, .squat-counter-container, .ready-button-container {
+        margin-top: 1rem; /* Adjust margins for mobile */
+        margin-left: 0; /* Remove left margin */
+        text-align: center; /* Center align on mobile */
+    }
+	.timer-container {
+		margin-top: -37.5rem; /* Increase margin to move it down */
+		 /* Adjust left margin if needed */
+		text-align: center; /* Center align text */
+	}
+    .squat-counter-container {
+		margin-top: 35rem;
+        font-size: 2rem; /* Adjust font size */
+    }
+	.my-squat-counter {
+        position: absolute; /* Ensure this is set if using positioning */
+		bottom: 34vh; /* Adjust distance from the bottom of the viewport */
+		left: 50%; /* Center horizontally */
+		transform: translateX(-50%); /* Center horizontally */
+		text-align: center; /* Center text and elements */
+		width: 80%; /* Adjust width as needed */
+		z-index: 10; /* Ensure it appears above other elements */
+    }
+    .ready-button-container, .opponent-ready-button {
+        margin-left: 0; /* Center buttons on mobile */
+        margin-top: -0.5rem; /* Adjust top margin */
+    }
+	.ready-button-container {
+		position: absolute; /* Ensure this is set if using positioning */
+		bottom: 34vh; /* Adjust distance from the bottom of the viewport */
+		left: 50%; /* Center horizontally */
+		transform: translateX(-50%); /* Center horizontally */
+		text-align: center; /* Center text and elements */
+		width: 80%; /* Adjust width as needed */
+		z-index: 10; /* Ensure it appears above other elements */
+	}
 }
