@@ -253,6 +253,7 @@ body {
 		width: 80vw; /* Adjust width as needed */
 		height: auto; /* Height adjusts based on content */
 		gap: 5rem; /* Space between stacked videos */
+		overflow: hidden; /* Prevent overflow */
 		margin: 2rem auto; /* Center container horizontally and add vertical margin */
 	}
 	
