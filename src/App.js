@@ -11,7 +11,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import "./App.css";
 import loadingGif from './loading.gif'; // Adjust the import path as needed
 import confettiGif from './confetti.gif';
-const socket = io.connect("https://squat-showdown.onrender.com");
+const socket = io.connect("https://squat-showdown.onrender.com/");
 
 const theme = createMuiTheme({
   palette: {
@@ -71,14 +71,20 @@ function App() {
   const canvasRef = useRef(null);
   const squatCounterRef = useRef(0); // Use ref to store counter without causing re-renders
   const stageRef = useRef("UP"); // Use ref for stage to prevent rapid state updates
-
+  
   function handleWindowSize() {
     setWindowSize({
       width: window.innerWidth,
       height: window.innerHeight,
     });
   }
-
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   useEffect(() => {
     window.onresize=() => handleWindowSize();
     if (bothReady) {
@@ -471,214 +477,182 @@ function App() {
       {winner === "draw" && <Confetti width ={windowSize.width} height={windowSize.height} numberOfPieces={300} />}
         {winner === "me" && <Confetti width ={windowSize.width/2} height={windowSize.height} numberOfPieces={300} />}
         {winner === "opponent" && <Confetti width ={windowSize.width/2} height={windowSize.height} style={{ position: 'absolute', left: windowSize.width/2 }} numberOfPieces={300}/>}
-        <div style={{
-          position: 'absolute',
-          top: '10vh',
-          width: '100%',
-          textAlign: 'center',
-          visibility: showRoomCode || loading ? 'hidden' : 'visible'
-        }}>
-          <h1 style={{ color: '#000', fontSize: '6.5rem', textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)', margin: '0px', marginLeft: '-10px'}}>
-            🏋️‍♂️
-          </h1>
-          <h2 style={{ color: '#000', fontSize: '3.5rem', margin: '20px'}}>
-            Squat Showdown
-          </h2>
-          <h3 style={{ color: '#000', fontSize: '1.5rem', margin: '0' }}>
-            Challenge your friends to a squat showdown
-          </h3>
+        <div className={`centered-container ${showRoomCode || loading ? 'hidden' : 'visible'}`}>
+          <h1 className="header-icon">🏋️‍♂️</h1>
+          <h2 className="header-title">Squat Showdown</h2>
+          <h3 className="header-subtitle">Challenge your friends to a squat showdown</h3>
         </div>
 
         {(showRoomCode || loading) && me && (
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 10,
-            width: '100%',
-            textAlign: 'center',
-            fontSize: '1.5rem',
-            fontWeight: 'bold'
-          }}>
-            <h1 style={{ color: '#000', fontSize: '4rem', margin: '0' }}>
-              🏋️‍♂️
-            </h1>
-            <h2 style={{ color: '#000', fontSize: '2.5rem', margin: '0' }}>
-              Squat Showdown
-            </h2>
-            <h3 style={{ color: '#000', fontSize: '1.5rem', margin: '0' }}>
-              Room Code: {displayRoomCode}
-            </h3>
+          <div className="room-container">
+            <h1 className="room-icon">🏋️‍♂️</h1>
+            <h2 className="room-title">Squat Showdown</h2>
+            <h3 className="room-code">Room Code: {displayRoomCode}</h3>
           </div>
         )}
-      </div>
 
-      <div className="container" style={{ marginTop: '100px' }}>
-        <div className="video-container">
-          <div className="video">
-            <video
-              playsInline
-              muted
-              ref={myVideo}
-              autoPlay
-              className={showRoomCode || loading ? "video-visible" : "video-hidden"}
-              style={{ width: "600px", height: "400px", objectFit: "cover" }}
-            />
+        <div className="container" style={{ marginTop: '100px' }}>
+          <div className="video-container">
+            <div className="video">
+              <video
+                playsInline
+                muted
+                ref={myVideo}
+                autoPlay
+                className={showRoomCode || loading ? 'video-visible' : 'video-hidden'}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </div>
+            <div className="video">
+              {(showRoomCode || loading) && !callAccepted ? (
+                <img src={loadingGif} alt="Loading..." style={{ width: '100%', height: '100%' }} />
+              ) : (
+                callAccepted && !callEnded && (
+                  <video
+                    playsInline
+                    muted
+                    ref={userVideo}
+                    autoPlay
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '15px' }} 
+                  />
+                )
+              )}
+            </div>
           </div>
-          <div className="video">
-            {(showRoomCode || loading) && !callAccepted ? (
-              <img src={loadingGif} alt="Loading..." style={{ width: "600px", height: "400px" }} />
-            ) : (
-              callAccepted && !callEnded && (
-                <video
-                  playsInline
-                  muted
-                  ref={userVideo}
-                  autoPlay
-                  style={{ width: "600px", height: "400px", objectFit: "cover", borderRadius: '15px' }} // Ensure user video has rounded corners
-                />
-              )
-            )}
-          </div>
-        </div>
 
-        {/* Squat counter */}
-        {showRoomCode && bothReady && (
-          <div className="timer-container" style={{ textAlign: 'center', marginTop: '150px', marginLeft: '-1250px' }}>
-          {showCountdown && (
-            <h2 style={{ color: '#000', fontSize: '2rem', margin: '0' }}>
-              Starting in: {countdown}s
-            </h2>
+          {showRoomCode && bothReady && (
+            <div className="timer-container">
+              {showCountdown && (
+                <h2>Starting in: {countdown}s</h2>
+              )}
+              {showSquatTimer && (
+                <h2>Time left: {squatTimer}s</h2>
+              )}
+              <div className="squat-counter-container">
+                {isHost ? (
+                  <>
+                    <span className="my-squat-counter squat-counter" style={isMobile ? { } : { marginRight: '50%' }}>{mySquatCount}</span>
+                    <span className="user-squat-counter squat-counter">{userSquatCount}</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="user-squat-counter squat-counter" style={isMobile ? { marginBottom: '10rem' } : { marginRight: '50%' }}>{userSquatCount}</span>
+                    <span className="my-squat-counter squat-counter">{mySquatCount}</span>
+                  </>
+                )}
+              </div>
+            </div>
           )}
-          {showSquatTimer && (
-            <h2 style={{ color: '#000', fontSize: '2rem', margin: '0' }}>
-              Time left: {squatTimer}s
-            </h2>
-          )}
-          <div className="squat-counter-container" style={{ textAlign: 'center', marginTop: '500px', fontSize: '3rem', color: '#000', marginLeft: '-40px' }}>
-            {isHost ? (
-              <>
-                <span className="my-squat-counter" style={{ marginRight: '650px'}}>{mySquatCount}</span> {/* Set color to black */}
-                <span className="user-squat-counter" style={{}}>{userSquatCount}</span> {/* Set color to black */}
-              </>
-            ) : (
-              <>
-                <span className="user-squat-counter" style={{marginRight: '650px'}}>{userSquatCount}</span> {/* Set color to black */}
-                <span className="my-squat-counter" style={{ }}>{mySquatCount}</span> {/* Set color to black */}
-              </>
-            )}
-          </div>
-        </div>
-        )}
-        {showRoomCode && !bothReady && (
-          <div className="ready-button-container" style={{ textAlign: 'center', marginTop: '650px', marginLeft: '-1890px', color: 'fff' }}>
-          <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleReady}
-              disabled={ready}
-              style={{ backgroundColor: ready ? 'green' : 'red',
-                color: 'white'
-               }}
-          >
-              {ready ? 'Ready' : 'Not Ready'}
-          </Button>
-      </div>
-        )}
-        
 
-            {/* Display the opponent's button */}
-            {showRoomCode && !bothReady && (
-                <div className="opponent-ready-button" style={{ textAlign: 'center', marginTop: '-37px', marginLeft: '745px', color: 'fff' }}>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        disabled
-                        style={{ backgroundColor: opponentReady ? 'green' : 'red', color: 'white' }}
-                    >
-                        {opponentReady ? 'Ready' : 'Not Ready'}
-                    </Button>
-                </div>
-            )}
-
-        <div className="myId" style={{ visibility: showButtons ? 'visible' : 'hidden' }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={createRoom}
-            startIcon={<NoteAddIcon fontSize="large" />}
-            style={{ marginBottom: '30px' }}
-          >
-            Create Room
-          </Button>
-
-          <TextField
-            id="caller-name"
-            label="Enter Caller Name"
-            variant="filled"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{ marginBottom: '20px' }}
-          />
-
-          <TextField
-            id="filled-basic"
-            label="Room Code to join"
-            variant="filled"
-            value={idToCall}
-            onChange={(e) => setIdToCall(e.target.value)}
-          />
-          <div className="call-button">
-            {callAccepted && !callEnded ? (
+          {showRoomCode && !bothReady && (
+            <div className="ready-button-container">
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={leaveCall}
+                onClick={handleReady}
+                disabled={ready}
+                style={{ backgroundColor: ready ? 'green' : 'red', color: 'white' }}
               >
-                End Call
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => callUser(idToCall)}
-                startIcon={<JoinIcon fontSize="large" />}
-              >
-                Join Room
-              </Button>
-            )}
-          </div>
-        </div>
-        <div>
-          {receivingCall && !callAccepted ? (
-            <div className="caller">
-              <h1 style={{ color: '#000', fontSize: '2.5rem', marginTop: '120px'}}>
-                {name} challenges you to a squat showdown!
-              </h1>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={answerCall}
-                style={{ backgroundColor: 'secondary', color: '#ffffff' }}
-              >
-                Answer
+                {ready ? 'Ready' : 'Not Ready'}
               </Button>
             </div>
-          ) : null}
-        </div>
-      </div>
+          )}
 
-      {/* Include the webcam feed and squat detection canvas */}
-      <div className="squat-detection-container" style={{ display: 'none' }}>
-        <div className="panel is-info">
-          <p className="panel-heading">Webcam</p>
-          <div className="panel-block">
-            <video ref={videoRef} className="input_video5" autoPlay muted></video>
+          {showRoomCode && !bothReady && (
+            <div className="opponent-ready-button">
+              <Button
+                variant="contained"
+                color="secondary"
+                disabled
+                style={{ backgroundColor: opponentReady ? 'green' : 'red', color: 'white' }}
+              >
+                {opponentReady ? 'Ready' : 'Not Ready'}
+              </Button>
+            </div>
+          )}
+
+          <div className={`myId ${showButtons ? 'visible' : 'hidden'}`}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={createRoom}
+              startIcon={<NoteAddIcon fontSize="large" />}
+              style={{ marginBottom: '30px' }}
+            >
+              Create Room
+            </Button>
+
+            <TextField
+              id="caller-name"
+              label="Enter Caller Name"
+              variant="filled"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              style={{ marginBottom: '20px' }}
+            />
+
+            <TextField
+              id="filled-basic"
+              label="Room Code to join"
+              variant="filled"
+              value={idToCall}
+              onChange={(e) => setIdToCall(e.target.value)}
+            />
+
+            <div className="call-button">
+              {callAccepted && !callEnded ? (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={leaveCall}
+                >
+                  End Call
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => callUser(idToCall)}
+                  startIcon={<JoinIcon fontSize="large" />}
+                >
+                  Join Room
+                </Button>
+              )}
+            </div>
+          </div>
+
+          <div>
+            {receivingCall && !callAccepted ? (
+              <div className="caller">
+                <h1 style={{ color: '#000', fontSize: isMobile ? '1.5rem' : '2.5rem', 
+            marginTop: isMobile ? '60px' : '120px'}}>
+                  {name} challenges you to a squat showdown!
+                </h1>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={answerCall}
+                  style={{ backgroundColor: 'secondary', color: '#ffffff' }}
+                >
+                  Answer
+                </Button>
+              </div>
+            ) : null}
           </div>
         </div>
-        <div className="panel is-info">
-          <p className="panel-heading">Squat Showdown</p>
-          <div className="panel-block">
-            <canvas ref={canvasRef} className="output5" width="480px" height="480px"></canvas>
+
+        <div className="squat-detection-container" style={{ display: 'none' }}>
+          <div className="panel is-info">
+            <p className="panel-heading">Webcam</p>
+            <div className="panel-block">
+              <video ref={videoRef} className="input_video5" autoPlay muted></video>
+            </div>
+          </div>
+          <div className="panel is-info">
+            <p className="panel-heading">Squat Showdown</p>
+            <div className="panel-block">
+              <canvas ref={canvasRef} className="output5" width="480px" height="480px"></canvas>
+            </div>
           </div>
         </div>
       </div>
