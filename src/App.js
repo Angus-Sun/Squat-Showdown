@@ -11,7 +11,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import "./App.css";
 import loadingGif from './loading.gif'; // Adjust the import path as needed
 import confettiGif from './confetti.gif';
-const socket = io.connect("https://squat-showdown.onrender.com/");
+const socket = io.connect("https://squat-showdown.onrender.com");
 
 const theme = createMuiTheme({
   palette: {
