@@ -10,7 +10,6 @@ html, body {
     width: 100vw; /* Use viewport width */
     height: 100vh; /* Use viewport height */
     position: absolute; /* Use absolute positioning */
-    overflow: hidden; /* Prevent overflow */
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); /* Center the container */
@@ -265,8 +264,6 @@ body {
 		max-height: 25vh; /* Limit height to make videos smaller */
 		object-fit: cover; /* Cover the container while maintaining aspect ratio */
 		border-radius: 15px; /* Round corners */
-		box-sizing: border-box; /* Include padding and borders in the width/height */
-}
 	}
     .myId {
         top: auto; /* Remove top positioning */
