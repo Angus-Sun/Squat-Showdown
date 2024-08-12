@@ -1,10 +1,10 @@
 # Squat Showdown 
-### Challenge your friends and foes in an online squatting competition! ️‍🔥
+Challenge your friends and foes in an online squatting competition! ️‍🔥
 
 # Video Demo 
 <div align="center">
   
-  [![Watch the video](https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
+  [![Watch the video](https://img.youtube.com/vi/mTJrxVXAJvs/0.jpg)](https://www.youtube.com/watch?v=mTJrxVXAJvs)
   
 </div>
 
