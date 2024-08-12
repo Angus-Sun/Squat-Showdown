@@ -1,2 +1,2 @@
 # Squat Showdown 
-Challenge your friends in an online squat showdown! ️‍🔥
+Challenge your friends and foes in an online squatting competition! ️‍🔥
