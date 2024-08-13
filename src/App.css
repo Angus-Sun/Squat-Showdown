@@ -172,8 +172,10 @@ body {
   }
   
   .timer-container {
+	font-size: 3rem;
+	color: #000;
 	text-align: center;
-	margin-top: 150px;
+	margin-top: 125px;
 	margin-left: -1250px;
   }
   
