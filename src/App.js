@@ -510,7 +510,6 @@ function App() {
                 callAccepted && !callEnded && (
                   <video
                     playsInline
-                    muted
                     ref={userVideo}
                     autoPlay
                     style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '15px' }} 
