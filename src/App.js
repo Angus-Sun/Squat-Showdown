@@ -9,50 +9,50 @@ import io from "socket.io-client";
 import Confetti from "react-confetti"
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import "./App.css";
-import loadingGif from './loading.gif'; // Adjust the import path as needed
+import loadingGif from './loading.gif'; 
 import confettiGif from './confetti.gif';
 const socket = io.connect("https://squat-showdown.onrender.com");
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: '#0047d4', // Custom primary color
+      main: '#0047d4', 
     },
     secondary: {
-      main: '#00b300', // Custom secondary color
+      main: '#00b300', 
     },
     third: {
       main: '00941b',
     }
   },
   typography: {
-    fontFamily: 'Arial, sans-serif', // Set font family to Arial
+    fontFamily: 'Arial, sans-serif', 
   },
 });
 
 function App() {
-  const [me, setMe] = useState(null); // This now holds the room code
+  const [me, setMe] = useState(null); 
   const [stream, setStream] = useState();
   const [receivingCall, setReceivingCall] = useState(false);
   const [caller, setCaller] = useState("");
   const [opponentReady, setOpponentReady] = useState(false);
-  const [mySquatCount, setMySquatCount] = useState(0); // Initialize state for my squat count
-  const [userSquatCount, setUserSquatCount] = useState(0); // Initialize state for user's squat count
+  const [mySquatCount, setMySquatCount] = useState(0); 
+  const [userSquatCount, setUserSquatCount] = useState(0); 
   const [callerSignal, setCallerSignal] = useState();
   const [callAccepted, setCallAccepted] = useState(false);
-  const [idToCall, setIdToCall] = useState(""); // This is now the room code to call
+  const [idToCall, setIdToCall] = useState(""); 
   const [callEnded, setCallEnded] = useState(false);
   const [winner, setWinner] = useState(null);
-  const [isHost, setIsHost] = useState(true); // New state to track if the user is the host
-  const [showRoomCode, setShowRoomCode] = useState(false); // State to control room code visibility
-  const [showButtons, setShowButtons] = useState(true); // State to control button visibility
-  const [loading, setLoading] = useState(false); // State to control loading
-  const [callerName, setCallerName] = useState(""); // New state for caller name
+  const [isHost, setIsHost] = useState(true); 
+  const [showRoomCode, setShowRoomCode] = useState(false); 
+  const [showButtons, setShowButtons] = useState(true); 
+  const [loading, setLoading] = useState(false); 
+  const [callerName, setCallerName] = useState(""); 
   const [name, setName] = useState("");
   const [displayRoomCode, setDisplayRoomCode] = useState('');
-  const displayRoomCodeRef = useRef(displayRoomCode); // State for displaying room code
+  const displayRoomCodeRef = useRef(displayRoomCode); 
   const [ready, setReady] = useState(false);
-  const [bothReady, setBothReady] = useState(false); // Track both players' readiness
+  const [bothReady, setBothReady] = useState(false); 
   const myVideo = useRef();
   const userVideo = useRef();
   const connectionRef = useRef();
@@ -60,7 +60,7 @@ function App() {
   const [squatTimer, setSquatTimer] = useState(30);
   const [showCountdown, setShowCountdown] = useState(false);
   const [showSquatTimer, setShowSquatTimer] = useState(false);
-  const squatTimerRunning = useRef(false); // Ref to track if the timer is running
+  const squatTimerRunning = useRef(false); 
   const [showConfetti, setShowConfetti] = useState(false);
   const [windowSize, setWindowSize] = useState({
     width: undefined,
@@ -69,8 +69,8 @@ function App() {
   // For squat detection
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  const squatCounterRef = useRef(0); // Use ref to store counter without causing re-renders
-  const stageRef = useRef("UP"); // Use ref for stage to prevent rapid state updates
+  const squatCounterRef = useRef(0); 
+  const stageRef = useRef("UP"); 
   
   function handleWindowSize() {
     setWindowSize({
@@ -109,7 +109,7 @@ function App() {
             clearInterval(countdownInterval);
             setShowCountdown(false);
             setShowSquatTimer(true);
-            return 0; // Reset countdown for future use
+            return 0; 
           }
 
           return prev - 1;
@@ -147,7 +147,7 @@ function App() {
             setWinner('me');
           }
       } else {
-        setWinner('draw'); // Optional: Handle draw case
+        setWinner('draw'); 
       }
     }
      // Timer is running
@@ -157,8 +157,8 @@ function App() {
           if (prev === 1) {
             clearInterval(squatTimerInterval);
             setShowSquatTimer(false);
-            squatTimerRunning.current = false; // Timer has stopped
-            return 0; // Reset squat timer for future use
+            squatTimerRunning.current = false; 
+            return 0; 
           }
           setShowSquatTimer(true);
           return prev - 1;
@@ -183,8 +183,8 @@ function App() {
     socket.on("me", (roomCode) => {
       console.log("Received room code:", roomCode, "Current me:", me);
       if (!me) {
-        setMe(roomCode); // Only update room code if it hasn't been set
-        setDisplayRoomCode(roomCode); // Set initial room code for display
+        setMe(roomCode); 
+        setDisplayRoomCode(roomCode); 
       }
     });
     socket.on("readyStateChanged", ({ allReady, mySquatCount, userSquatCount, playersReady }) => {
@@ -325,7 +325,7 @@ function App() {
         leftShoulder &&
         rightShoulder
       ) {
-        const visibilityThreshold = 0.5; // Adjust based on your needs
+        const visibilityThreshold = 0.5; 
 
         const landmarksAreVisible = [
           landmarks[23].visibility,
@@ -370,18 +370,18 @@ function App() {
       }
     }
     socket.on("mysquatCountUpdated", ({mySquatCount, roomCode}) => {
-      if (roomCode === me) { // Ensure room code matches
+      if (roomCode === me) { 
         setMySquatCount(mySquatCount);
       }
 
   });
     socket.on("usersquatCountUpdated", ({userSquatCount, roomCode}) => {
-      if (roomCode === me) { // Ensure room code matches
+      if (roomCode === me) { 
         setUserSquatCount(userSquatCount);
       }
   });
     
-    // Clean up socket listeners
+    
     return () => {
       socket.off("me");
     };
@@ -392,9 +392,9 @@ function App() {
   };
   const callUser = (roomCode) => {
     setIsHost(false);
-    setLoading(true); // Start loading when initiating the call
+    setLoading(true); 
     setShowButtons(false);
-    setDisplayRoomCode(""); // Clear room code until call is accepted
+    setDisplayRoomCode(""); 
     setShowRoomCode(true);
     setIsHost(false);
     setMe(roomCode);
@@ -415,11 +415,11 @@ function App() {
     });
     peer.on("stream", (stream) => {
       userVideo.current.srcObject = stream;
-      setLoading(false); // Stop loading when user video is received
+      setLoading(false); 
     });
     socket.on("callAccepted", (signal) => {
       setCallAccepted(true);
-      setDisplayRoomCode(roomCode); // Update room code after call is accepted
+      setDisplayRoomCode(roomCode); 
       localStorage.setItem('roomCode', roomCode);
       displayRoomCodeRef.current = localStorage.getItem('roomCode')
       peer.signal(signal);
@@ -429,12 +429,12 @@ function App() {
   };
 
   const answerCall = () => {
-    setDisplayRoomCode(me); // Update room code after call is accepted
+    setDisplayRoomCode(me); 
     localStorage.setItem('roomCode', me);
     displayRoomCodeRef.current = localStorage.getItem('roomCode')
     setIsHost(true);
     setCallAccepted(true);
-    setLoading(true); // Start loading when answering the call
+    setLoading(true); 
     setShowRoomCode(true);
     const peer = new Peer({
       initiator: false,
@@ -446,7 +446,7 @@ function App() {
     });
     peer.on("stream", (stream) => {
       userVideo.current.srcObject = stream;
-      setLoading(false); // Stop loading when user video is received
+      setLoading(false); 
     });
 
     peer.signal(callerSignal);
@@ -459,16 +459,16 @@ function App() {
   };
 
   const createRoom = () => {
-    socket.emit("createRoom"); // Emit event to create a room
+    socket.emit("createRoom"); 
     setIsHost(true);
   
     setTimeout(() => {
-      setShowRoomCode(true); // Show the room code when the button is pressed
-      setShowButtons(false); // Hide buttons when the room is created
+      setShowRoomCode(true); 
+      setShowButtons(false); 
   
       // Join the room after creation
       socket.emit("joinRoom", me);
-    }, 500); // Adjust this timeout if needed based on server response time
+    }, 500); 
   };
 
   return (
