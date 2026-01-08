@@ -34,6 +34,12 @@ io.on("connection", (socket) => {
             playersReady: {} // Track readiness of players
         };
     }
+
+    // Handle ping for latency measurement
+    socket.on("ping", (callback) => {
+        callback();
+    });
+
     socket.on("playerReady", (roomCode) => {
         if (roomData[roomCode]) {
             socket.to(roomCode).emit("playerReady", socket.id);

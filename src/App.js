@@ -11,7 +11,9 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import "./App.css";
 import loadingGif from './loading.gif'; 
 import confettiGif from './confetti.gif';
-const socket = io.connect("https://squat-showdown.onrender.com");
+
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || "http://localhost:5000";
+const socket = io.connect(SOCKET_URL);
 
 const theme = createMuiTheme({
   palette: {
@@ -71,6 +73,8 @@ function App() {
   const canvasRef = useRef(null);
   const squatCounterRef = useRef(0); 
   const stageRef = useRef("UP"); 
+  const [latency, setLatency] = useState(null);
+  const [latencyStats, setLatencyStats] = useState({ min: Infinity, max: 0, avg: 0, samples: [] });
   
   function handleWindowSize() {
     setWindowSize({
@@ -170,6 +174,37 @@ function App() {
       clearInterval(squatTimerInterval);
     };
   }, [showSquatTimer]);
+
+  // Measure latency every 2 seconds
+  useEffect(() => {
+    const measureLatency = () => {
+      const start = Date.now();
+      socket.emit("ping", () => {
+        const duration = Date.now() - start;
+        setLatency(duration);
+        
+        // Track statistics
+        setLatencyStats(prev => {
+          const newSamples = [...prev.samples, duration].slice(-50); // Keep last 50 samples
+          const avg = Math.round(newSamples.reduce((a, b) => a + b, 0) / newSamples.length);
+          const min = Math.min(...newSamples);
+          const max = Math.max(...newSamples);
+          
+          // Log stats to console for resume data
+          console.log(`Latency Stats - Current: ${duration}ms | Avg: ${avg}ms | Min: ${min}ms | Max: ${max}ms | Samples: ${newSamples.length}`);
+          
+          return { min, max, avg, samples: newSamples };
+        });
+      });
+    };
+
+    // Measure immediately and then every 2 seconds
+    measureLatency();
+    const latencyInterval = setInterval(measureLatency, 2000);
+
+    return () => clearInterval(latencyInterval);
+  }, []);
+
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
       setStream(stream);
@@ -488,6 +523,15 @@ function App() {
             <h1 className="room-icon">🏋️‍♂️</h1>
             <h2 className="room-title">Squat Showdown</h2>
             <h3 className="room-code">Room Code: {displayRoomCode}</h3>
+            {latency !== null && (
+              <p className="latency-display" style={{ 
+                fontSize: '0.9rem', 
+                color: latency < 100 ? '#00b300' : latency < 200 ? '#ffa500' : '#ff0000',
+                marginTop: '5px'
+              }}>
+                Latency: {latency}ms
+              </p>
+            )}
           </div>
         )}
 
