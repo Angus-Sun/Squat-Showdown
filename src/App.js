@@ -255,7 +255,7 @@ function App() {
     pose.onResults((results) => {
       canvasCtx.save();
       canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-      // Comment out or remove the following line if you don't want to draw the video frame
+      // debugging (shows pose landmarks)
       // canvasCtx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
       
       // Remove or comment out the drawing of pose connections and landmarks
